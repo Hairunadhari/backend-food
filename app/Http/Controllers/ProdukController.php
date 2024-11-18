@@ -2,64 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
 use App\Models\Produk;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class ProdukController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index(){
+        $kategori = Kategori::all();
+        if (request()->ajax()) {
+            $data = Produk::all();
+            return DataTables::of($data)->make(true);
+        }
+        return view('produk.index',compact('kategori'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function submit(Request $request){
+        
+
+        $image = $request->file('image');
+        $image->storeAs('public/image', $image->hashName());
+        Produk::create([
+            'kategori_id' => $request->kategori_id,
+            'name' => $request->name,
+            'price' => $request->price,
+            'desc' => $request->desc,
+            'image' => $image->hashName(),
+        ]);
+
+        return redirect('/produk')->with('success', 'data dah masukk');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function edit($id){
+        $kategori = Kategori::all();
+        $data = Produk::find($id);
+        return view('produk.edit', compact('data','kategori'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Produk $produk)
-    {
-        //
-    }
+    public function update(Request $request, $id){
+        
+        $dataX = Produk::find($id);
+        $data = [
+            'kategori_id' => $request->kategori_id,
+            'name' => $request->name,
+            'price' => $request->price,
+            'desc' => $request->desc,
+        ];
+        
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $data['image'] = $image->hashName();
+            $image->storeAs('public/image', $data['image']);
+        }    
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Produk $produk)
-    {
-        //
-    }
+        $dataX->update($data);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Produk $produk)
-    {
-        //
+        return redirect('/produk')->with('success', 'data dah di update');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Produk $produk)
-    {
-        //
+    
+    public function delete($id){
+        $data = Produk::find($id);
+        $data->delete();
+        return redirect('/produk')->with('success', 'data dah di hapuss');
     }
 }
