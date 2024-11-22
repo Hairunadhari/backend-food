@@ -9,6 +9,7 @@ use Validator;
 
 class KategoriController extends Controller
 {
+     
     public function index(){
         if (request()->ajax()) {
             $data = Kategori::all();

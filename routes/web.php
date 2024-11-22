@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\Api\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +30,6 @@ Route::post('/produk/submit', [ProdukController::class, 'submit']);
 Route::get('/produk/edit/{id}', [ProdukController::class, 'edit']);
 Route::put('/produk/update/{id}', [ProdukController::class, 'update']);
 Route::delete('/produk/delete/{id}', [ProdukController::class, 'delete']);
+
+
     

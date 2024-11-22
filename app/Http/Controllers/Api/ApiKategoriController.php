@@ -9,6 +9,9 @@ use App\Http\Controllers\Controller;
 
 class ApiKategoriController extends Controller
 {
+    /**
+     * List Kategori.
+     */
     public function index()
 {
     $data = Kategori::paginate(10);
@@ -30,6 +33,9 @@ class ApiKategoriController extends Controller
 }
 
 
+    /**
+     * Get Produk By Kategori.
+     */
     public function getProdukByKategori($id){
         $data = Kategori::with('produk')->where('id',$id)->paginate(10);
         return response()->json([
